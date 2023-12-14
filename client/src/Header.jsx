@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
+import { UserContext } from "./UserContext";
 
 export default function Header() {
-  const [username, setUsername] = useState(null);
+  const { userInfo, setUserInfo } = useContext(UserContext);
+  const username = userInfo?.username;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,7 +19,7 @@ export default function Header() {
         }
 
         const data = await response.json();
-        setUsername(data.username);
+        setUserInfo(data);
         console.log(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -32,7 +34,7 @@ export default function Header() {
       method: "POST",
       credentials: "include",
     });
-    setUsername(null);
+    setUserInfo(null);
     return <Navigate to={"/"} />;
   }
 
