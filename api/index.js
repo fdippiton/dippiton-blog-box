@@ -1,6 +1,7 @@
 // require("dotenv").config();
 const express = require("express");
 const config = require("../config");
+const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -28,6 +29,7 @@ const app = express();
 const secretKey = config.SECRET_KEY;
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
+app.use(cookieParser());
 
 // Connect database
 const connectionString = config.database.CONNECTIONSTRING;
@@ -75,6 +77,18 @@ app.post("/login", async (req, res) => {
       });
     }
   }
+});
+
+app.get("/profile", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, secretKey, {}, (err, info) => {
+    if (err) throw err;
+    res.json(info);
+  });
+});
+
+app.post("/logout", (req, res) => {
+  res.cookie("token", "").json("ok");
 });
 
 app.listen(4000);
