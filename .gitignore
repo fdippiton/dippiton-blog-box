@@ -3,6 +3,7 @@ node_modules/
 
 # Express
 .env
+config.js
 
 # React
 /build
