@@ -1,29 +1,33 @@
-export default function Post() {
+import { format } from "date-fns";
+import { Link } from "react-router-dom";
+// import { formatISO9075 } from "date-fns";
+
+export default function Post({
+  _id,
+  title,
+  summary,
+  content,
+  cover,
+  createdAt,
+  author,
+}) {
   return (
     <div className="post">
       <div className="image">
-        <img src="https://cdn.pixabay.com/photo/2020/01/26/20/14/computer-4795762_1280.jpg" />
+        <Link to={`/post/${_id}`}>
+          <img src={"http://localhost:4000/" + cover} />
+        </Link>
       </div>
       <div className="texts">
-        <h2>Title</h2>
+        <Link to={`/post/${_id}`}>
+          <h2>{title}</h2>
+        </Link>
         <p className="info">
-          <a className="author">Sofia Marie Olsen</a>
-          <time>2023-01-16 16:45</time>
+          <a className="author">{author.username}</a>
+          {/* <time>{formatISO9075(new Date(createdAt))}</time> */}
+          <time>{format(new Date(createdAt), "MMM d, yyyy  HH:mm")}</time>
         </p>
-        <p className="summary">
-          Dolor ut ipsum ad in voluptate id commodo amet sunt id. Incididunt
-          Lorem mollit sunt aliquip proident qui reprehenderit eiusmod
-          consectetur veniam. Do nostrud esse Lorem deserunt reprehenderit elit
-          amet dolor voluptate. Et deserunt irure enim cupidatat ullamco
-          exercitation sunt eu Lorem. Dolor labore mollit qui proident Lorem
-          quis ullamco sunt sint anim non exercitation dolor. Incididunt laborum
-          qui aute do aliquip ullamco est. Mollit laborum sunt sunt id consequat
-          exercitation qui commodo et officia aliqua aliquip. Amet excepteur
-          laboris amet laborum. Dolor dolor irure aliqua qui exercitation
-          officia. Tempor laborum duis aliquip laborum occaecat deserunt. Ea ad
-          ex deserunt sunt ut pariatur duis. Nisi veniam sunt cillum et quis.
-          Proident culpa velit officia ex amet commodo do magna.
-        </p>
+        <p className="summary">{summary}</p>
       </div>
     </div>
   );
