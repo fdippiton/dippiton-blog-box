@@ -6,9 +6,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
+const multer = require("multer");
+const fs = require("fs");
 
 // Models
 const User = require("./models/User");
+const Post = require("./models/Post");
 
 // The code snippet provided is using the CORS (Cross-Origin Resource Sharing) middleware for a Node.js application. CORS is a security feature implemented by web browsers to prevent web pages from making requests to a different domain than the one that served the web page.
 
@@ -26,6 +29,7 @@ const User = require("./models/User");
 // app.use(cors(corsOptions));
 
 const app = express();
+const uploadMiddleware = multer({ dest: "uploads/" });
 const secretKey = config.SECRET_KEY;
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
@@ -92,6 +96,23 @@ app.get("/profile", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json("ok");
+});
+
+app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
+  const { originalname, path } = req.file;
+  const parts = originalname.split(".");
+  const ext = parts[parts.length - 1];
+  const newPath = path + "." + ext;
+  fs.renameSync(path, newPath);
+
+  const { title, summary, content } = req.body;
+  const postDoc = await Post.create({
+    title,
+    summary,
+    content,
+    cover: newPath,
+  });
+  res.json(postDoc);
 });
 
 app.listen(4000);
