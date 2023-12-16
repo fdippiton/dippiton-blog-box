@@ -147,9 +147,46 @@ app.get("/post", async (req, res) => {
 });
 
 app.get("/post/:id", async (req, res) => {
+  // Destructure id from params
   const { id } = req.params;
+  // Find post by id, populate author, it means include the username from author model
   const postDoc = await Post.findById(id).populate("author", ["username"]);
+  // Return post document as json
   res.json(postDoc);
+});
+
+app.put("/post/", uploadMiddleware.single("file"), async (req, res) => {
+  let newPath = null;
+  if (req.file) {
+    // Renaming the file with the correct extension
+    const { originalname, path } = req.file;
+    const parts = originalname.split(".");
+    const ext = parts[parts.length - 1];
+    newPath = path + "." + ext;
+    fs.renameSync(path, newPath);
+  }
+
+  // Verify user's JWT token and check post ownership
+  const { token } = req.cookies;
+  jwt.verify(token, secretKey, {}, async (err, info) => {
+    if (err) throw err;
+    const { id, title, summary, content } = req.body;
+    const postDoc = await Post.findById(id);
+    const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+    if (!isAuthor) {
+      return res.status(400).json("You are not the author");
+    }
+
+    // Update the post
+    await postDoc.updateOne({
+      title,
+      summary,
+      content,
+      cover: newPath ? newPath : postDoc.cover,
+    });
+    // Sending the updated post as a JSON response
+    res.json(postDoc);
+  });
 });
 
 app.listen(4000);
