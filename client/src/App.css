@@ -4,18 +4,21 @@
 
 body {
   color: #222;
+  font-family: "Helvetica";
 }
 
 img {
   width: 100%;
   max-width: 100%;
   max-height: 30vh;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 main {
-  padding: 10px;
+  padding: 10px 10px 0 10px;
   max-width: 80%;
-  margin: 0 auto;
+  margin: 0 auto 100px auto;
 }
 
 header {
@@ -37,8 +40,17 @@ header a {
 }
 
 header a.logo {
-  font-weight: bold;
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  font-family: "Press Start 2P";
+}
+
+a.logo h6 {
+  margin: 0 0 0 5px;
+  font-size: 23px;
+  background: linear-gradient(103deg, #c1c1e0 0%, #86a8e7 37%, #d3e0cd 100%);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 header nav {
@@ -56,7 +68,7 @@ div.post {
 
 @media (min-width: 768px) {
   div.post {
-    grid-template-columns: 0.9fr 1.1fr;
+    grid-template-columns: 0.7fr 1.3fr;
   }
 }
 
@@ -108,9 +120,9 @@ button {
   width: 100%;
   display: block;
   padding: 7px 0;
-  background-color: #555;
+  background: linear-gradient(103deg, #c1c1e0 0%, #86a8e7 37%, #d3e0cd 100%);
   border: 0;
-  color: #fff;
+  color: black;
   border-radius: 5px;
 }
 
@@ -123,6 +135,7 @@ div.post-page div.image {
   overflow: hidden;
   display: flex;
   max-height: 200px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 div.post-page div.image img {
@@ -157,6 +170,7 @@ div.post-page .author {
 
 div.post-page div.content p {
   line-height: 1.6em;
+  font-size: 20px;
 }
 
 div.edit-row {
@@ -174,7 +188,49 @@ div.post-page a.edit-btn {
   padding: 15px 30px;
   border-radius: 5px;
 }
+div.post-page a.delete-btn {
+  background-color: #c70039;
+  margin-left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 5px;
+}
 
 a svg {
   height: 20px;
+}
+
+svg {
+  height: 20px;
+}
+
+.box {
+  height: 30px;
+}
+
+.footer {
+  background-color: #cfd8dc;
+  padding: 12px;
+  text-align: center;
+  font-size: 12px;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  font-weight: bold;
+  font-family: "Press Start 2P";
+}
+
+#dropdown-basic,
+#NewPost,
+#logout {
+  font-size: 15px;
+}
+
+#dropdown-basic {
+  background: #c1c1e0;
+  border: 0;
 }

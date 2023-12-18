@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { UserContext } from "./UserContext";
+import { Dropdown } from "react-bootstrap";
 
 export default function Header() {
   const { userInfo, setUserInfo } = useContext(UserContext);
@@ -41,17 +42,28 @@ export default function Header() {
   return (
     <header>
       <Link to="/" className="logo">
-        dippiton-blogbox
+        <h6>Dblogbox</h6>
       </Link>
       <nav>
         {username && (
-          <>
-            <h4>
+          <Dropdown>
+            <Dropdown.Toggle variant="" id="dropdown-basic">
               <strong>{username}</strong>
-            </h4>
-            <Link to="/create">Create new post</Link>
-            <Link onClick={logout}>Logout</Link>
-          </>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item as="div">
+                <Link to="/create" id="NewPost">
+                  Create new post
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item as="div">
+                <Link onClick={logout} id="logout">
+                  Logout
+                </Link>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         )}
         {!username && (
           <>

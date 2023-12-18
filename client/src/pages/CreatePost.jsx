@@ -37,6 +37,7 @@ function CreatePost() {
 
   return (
     <form onSubmit={createNewPost}>
+      <h4>New Post</h4>
       <input
         type="title"
         placeholder={"Title"}
@@ -51,7 +52,9 @@ function CreatePost() {
       />
       <input type="file" onChange={(ev) => setFiles(ev.target.files)} />
       <Editor onChange={setContent} value={content} />
-      <button style={{ marginTop: "5px" }}>Create post</button>
+      <button style={{ marginTop: "5px" }} className="mt-5">
+        Create post
+      </button>
     </form>
   );
 }

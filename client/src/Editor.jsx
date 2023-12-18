@@ -31,6 +31,11 @@ export default function Editor({ value, onChange }) {
     "image",
   ];
 
+  const editorStyle = {
+    height: "200px", // Puedes ajustar el porcentaje o el valor en píxeles según tus necesidades
+    margin: "auto", // Esto centra el editor en el contenedor
+  };
+
   return (
     <ReactQuill
       value={value}
@@ -38,6 +43,7 @@ export default function Editor({ value, onChange }) {
       onChange={onChange}
       modules={modules}
       formats={formats}
+      style={editorStyle}
     />
   );
 }

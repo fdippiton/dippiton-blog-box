@@ -189,4 +189,40 @@ app.put("/post/", uploadMiddleware.single("file"), async (req, res) => {
   });
 });
 
+app.delete("/delete/:id", async (req, res) => {
+  // Verificar el token JWT del usuario y comprobar la propiedad del post
+  const { token } = req.cookies;
+  jwt.verify(token, secretKey, {}, async (err, info) => {
+    if (err) throw err;
+
+    // Obtener el id del parámetro de ruta
+    const { id } = req.params;
+
+    try {
+      // Buscar y eliminar el post por su id
+      const postDeleted = await Post.findOneAndDelete({ _id: id });
+
+      // Verificar si el usuario es el autor del post
+      const isAuthor =
+        JSON.stringify(postDeleted.author) === JSON.stringify(info.id);
+
+      if (!isAuthor) {
+        return res.status(400).json("You are not the author");
+      }
+
+      // Verificar si se eliminó correctamente y enviar la respuesta
+      if (postDeleted) {
+        console.log("Registro eliminado:", postDeleted);
+        return res.status(200).json("Post deleted successfully");
+      } else {
+        console.log("No se encontró el registro para eliminar.");
+        return res.status(404).json("Post not found");
+      }
+    } catch (error) {
+      console.error("Error al eliminar el registro:", error);
+      return res.status(500).json("Internal Server Error");
+    }
+  });
+});
+
 app.listen(4000);
