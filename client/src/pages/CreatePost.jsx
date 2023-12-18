@@ -12,6 +12,7 @@ function CreatePost() {
   const [redirect, setRedirect] = useState(false);
 
   async function createNewPost(ev) {
+    // Creates a new FormData object to hold the data of the post
     const data = new FormData();
     data.set("title", title);
     data.set("summary", summary);
@@ -19,7 +20,7 @@ function CreatePost() {
     data.set("file", files[0]);
 
     ev.preventDefault();
-
+    // Sends a POST request to the server at "http://localhost:4000/post" with the FormData object as the body of the request. The credentials: "include" option tells the browser to include any cookies associated with the current domain when making the request.
     const response = await fetch("http://localhost:4000/post", {
       method: "POST",
       body: data,

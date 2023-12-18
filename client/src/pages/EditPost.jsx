@@ -73,7 +73,9 @@ function EditPost() {
       />
       <input type="file" onChange={(ev) => setFiles(ev.target.files)} />
       <Editor onChange={setContent} value={content} />
-      <button style={{ marginTop: "5px" }}>Edit post</button>
+      <button style={{ marginTop: "5px" }} className="mt-5">
+        Edit post
+      </button>
     </form>
   );
 }

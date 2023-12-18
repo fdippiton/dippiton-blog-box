@@ -29,6 +29,7 @@ const Post = require("./models/Post");
 // app.use(cors(corsOptions));
 
 const app = express();
+// multer es una biblioteca de middleware para Node.js que se utiliza para gestionar la carga de archivos (por ejemplo, imágenes, videos, documentos) en aplicaciones web. Facilita la manipulación de datos de formulario que contienen archivos, que generalmente se envían mediante formularios HTML.
 const uploadMiddleware = multer({ dest: "uploads/" });
 const secretKey = config.SECRET_KEY;
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
@@ -40,6 +41,9 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 const connectionString = config.database.CONNECTIONSTRING;
 mongoose.connect(connectionString);
 
+/* -------------------------------------------------------------------------- */
+/*                              Register new user                             */
+/* -------------------------------------------------------------------------- */
 app.post("/register", async (req, res) => {
   // destructure request body for username and password
   const { username, password } = req.body;
@@ -57,6 +61,9 @@ app.post("/register", async (req, res) => {
   }
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                    Login                                   */
+/* -------------------------------------------------------------------------- */
 app.post("/login", async (req, res) => {
   // destructure request body for username and password
   const { username, password } = req.body;
@@ -90,6 +97,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
+/* -------------------------------------------------------------------------- */
+/*                            Get current user info                           */
+/* -------------------------------------------------------------------------- */
 app.get("/profile", (req, res) => {
   // Get token from cookies
   const { token } = req.cookies;
@@ -103,12 +113,17 @@ app.get("/profile", (req, res) => {
   });
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                   Logout                                   */
+/* -------------------------------------------------------------------------- */
 app.post("/logout", (req, res) => {
   // Setting cookie named 'token' to an empty string
   res.cookie("token", "").json("ok");
 });
 
-// Function to handle the creation of a new post
+/* -------------------------------------------------------------------------- */
+/*                               Create new post                              */
+/* -------------------------------------------------------------------------- */
 app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   // Renaming the file with the correct extension
   const { originalname, path } = req.file;
@@ -136,6 +151,9 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   });
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                Get all posts                               */
+/* -------------------------------------------------------------------------- */
 app.get("/post", async (req, res) => {
   // Find all posts in the database
   res.json(
@@ -146,6 +164,9 @@ app.get("/post", async (req, res) => {
   );
 });
 
+/* -------------------------------------------------------------------------- */
+/*                             Get a specific post                            */
+/* -------------------------------------------------------------------------- */
 app.get("/post/:id", async (req, res) => {
   // Destructure id from params
   const { id } = req.params;
@@ -155,6 +176,9 @@ app.get("/post/:id", async (req, res) => {
   res.json(postDoc);
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                 Update post                                */
+/* -------------------------------------------------------------------------- */
 app.put("/post/", uploadMiddleware.single("file"), async (req, res) => {
   let newPath = null;
   if (req.file) {
@@ -189,6 +213,9 @@ app.put("/post/", uploadMiddleware.single("file"), async (req, res) => {
   });
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                Delete a post                               */
+/* -------------------------------------------------------------------------- */
 app.delete("/delete/:id", async (req, res) => {
   // Verificar el token JWT del usuario y comprobar la propiedad del post
   const { token } = req.cookies;
