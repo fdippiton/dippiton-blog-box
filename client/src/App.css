@@ -50,6 +50,7 @@ a.logo h6 {
   font-size: 23px;
   background: linear-gradient(103deg, #c1c1e0 0%, #86a8e7 37%, #d3e0cd 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
 }
 

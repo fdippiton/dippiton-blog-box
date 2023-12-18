@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { UserContext } from "./UserContext";
 import { Dropdown } from "react-bootstrap";
@@ -7,6 +7,7 @@ import { Dropdown } from "react-bootstrap";
 export default function Header() {
   const { userInfo, setUserInfo } = useContext(UserContext);
   const username = userInfo?.username;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,13 +31,22 @@ export default function Header() {
     fetchData();
   }, []);
 
-  function logout() {
-    fetch("http://localhost:4000/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-    setUserInfo(null);
-    return <Navigate to={"/"} />;
+  async function logout() {
+    try {
+      await fetch("http://localhost:4000/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      // Después de la solicitud fetch, actualiza el estado
+      setUserInfo(null);
+
+      // Redirecciona a la página principal
+      navigate("/");
+    } catch (error) {
+      console.error("Error during logout:", error);
+      // Puedes manejar el error según tus necesidades
+    }
   }
 
   return (
