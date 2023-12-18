@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 /*
 This code is a functional component that serves as the register page for a website. The component maintains two pieces of state, username and password, using the useState hook.
@@ -8,6 +9,7 @@ The register function sends a POST request to the server with the entered userna
 function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   async function register(ev) {
     ev.preventDefault();
@@ -20,6 +22,7 @@ function RegisterPage() {
 
     if (response.status === 200) {
       alert("Registration successful.");
+      navigate("/login");
     } else {
       alert("Registration failed. Try again.");
     }
