@@ -36,17 +36,18 @@ function LoginPage() {
 
   return (
     <form className="login" onSubmit={login}>
-      <h1>Login</h1>
+      <h4>Dblogbox</h4>
+      <h6>Welcome back! Please log in to continue.</h6>
 
       <input
         type="text"
-        placeholder="username"
+        placeholder="Username"
         value={username}
         onChange={(ev) => setUsername(ev.target.value)}
       />
       <input
         type="password"
-        placeholder="password"
+        placeholder="Password"
         value={password}
         onChange={(ev) => setPassword(ev.target.value)}
       />

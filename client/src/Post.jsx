@@ -2,6 +2,9 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 // import { formatISO9075 } from "date-fns";
 
+/* This code snippet is defining a React functional component named `Post`. The component takes in
+several props including `_id`, `title`, `summary`, `content`, `cover`, `createdAt`, and `author`.
+Inside the component, it returns JSX that represents the structure of a post. */
 export default function Post({
   _id,
   title,

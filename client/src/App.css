@@ -4,7 +4,8 @@
 
 body {
   color: #222;
-  font-family: "Helvetica";
+  font-family: "Inter", sans-serif;
+  /* font-family: "Helvetica"; */
 }
 
 img {
@@ -32,6 +33,7 @@ header {
 header nav {
   display: flex;
   align-items: center;
+  font-size: 14px;
 }
 
 header a {
@@ -42,7 +44,8 @@ header a {
 header a.logo {
   display: flex;
   align-items: center;
-  font-family: "Press Start 2P";
+  font-family: "Inter", sans-serif;
+  /* font-family: "Press Start 2P"; */
 }
 
 a.logo h6 {
@@ -111,25 +114,32 @@ input {
   display: block;
   margin-bottom: 5px;
   width: 100%;
-  padding: 7px 7px;
+  padding: 5px 5px;
   border: 2px solid #ddd;
   background-color: #fff;
   border-radius: 5px;
+  font-size: 12px;
 }
 
 button {
   width: 100%;
   display: block;
   padding: 7px 0;
-  background: linear-gradient(103deg, #c1c1e0 0%, #86a8e7 37%, #d3e0cd 100%);
+  background: #1b2833;
+  color: white;
+  /* background: linear-gradient(103deg, #c1c1e0 0%, #86a8e7 37%, #d3e0cd 100%); */
   border: 0;
-  color: black;
   border-radius: 5px;
+  font-size: 13px;
 }
 
-form.login h1,
-form.register h1 {
+form.login h4, form.login h6,
+form.register h4, form.register h6 {
   text-align: center;
+}
+
+form.login h6, form.register h6 {
+  font-size: 13px;
 }
 
 div.post-page div.image {
@@ -214,15 +224,16 @@ svg {
 }
 
 .footer {
-  background-color: #cfd8dc;
+  background-color: #1b2833;
   padding: 12px;
+  color: white;
   text-align: center;
   font-size: 12px;
   bottom: 0;
   position: fixed;
   width: 100%;
   font-weight: bold;
-  font-family: "Press Start 2P";
+  font-family: "Inter", sans-serif;
 }
 
 #dropdown-basic,
