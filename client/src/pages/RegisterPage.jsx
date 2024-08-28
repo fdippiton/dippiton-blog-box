@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 /*
 This code is a functional component that serves as the register page for a website. The component maintains two pieces of state, username and password, using the useState hook.

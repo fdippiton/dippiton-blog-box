@@ -17,7 +17,7 @@ function CreatePost() {
     data.set("title", title);
     data.set("summary", summary);
     data.set("content", content);
-    data.set("file", files[0]);
+    data.set("file", files);
 
     ev.preventDefault();
     // Sends a POST request to the server at "http://localhost:4000/post" with the FormData object as the body of the request. The credentials: "include" option tells the browser to include any cookies associated with the current domain when making the request.
@@ -51,7 +51,11 @@ function CreatePost() {
         value={summary}
         onChange={(ev) => setSummary(ev.target.value)}
       />
-      <input type="file" onChange={(ev) => setFiles(ev.target.files)} />
+      <input
+        type="file"
+        accept="image/"
+        onChange={(ev) => setFiles(ev.target.files[0])}
+      />
       <Editor onChange={setContent} value={content} />
       <button style={{ marginTop: "5px" }} className="mt-5">
         Create post
