@@ -2,12 +2,14 @@
 /*                            CREATE POST COMPONENT                           */
 /* -------------------------------------------------------------------------- */
 
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import Editor from "../Editor";
 import "react-quill/dist/quill.snow.css";
+import { UserContext } from "../UserContext";
 
 function CreatePost() {
+  const { baseUrl } = useContext(UserContext);
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
@@ -25,7 +27,7 @@ function CreatePost() {
 
     try {
       // Sends a POST request to the server at "http://localhost:4000/post" with the FormData object as the body of the request. The credentials: "include" option tells the browser to include any cookies associated with the current domain when making the request.
-      const response = await fetch("http://localhost:4000/post", {
+      const response = await fetch(`${baseUrl}/post`, {
         method: "POST",
         body: data,
         credentials: "include",

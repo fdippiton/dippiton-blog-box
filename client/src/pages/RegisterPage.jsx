@@ -2,14 +2,16 @@
 /*                           REGISTER PAGE COMPONENT                          */
 /* -------------------------------------------------------------------------- */
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 /*
 This code is a functional component that serves as the register page for a website. The component maintains two pieces of state, username and password, using the useState hook.
 The register function sends a POST request to the server with the entered username and password. The fetch API is used to send the request.
 */
 function RegisterPage() {
+  const { baseUrl } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ function RegisterPage() {
   async function register(ev) {
     ev.preventDefault();
 
-    const response = await fetch("http://localhost:4000/register", {
+    const response = await fetch(`${baseUrl}/register`, {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" },

@@ -106,7 +106,7 @@ const upload = multer({ storage: storage });
  *   "password": "password123"
  * }
  */
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   const { username, password } = req.body; // destructure request body for username and password
   const hashedPassword = await bcrypt.hash(password, 10); // Hashear la contraseña antes de almacenarla
 
@@ -128,7 +128,7 @@ app.post("/register", async (req, res) => {
  * example
  * GET /profile
  */
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { username, password } = req.body; // destructure request body for username and password
 
   // Input validation: ensure username and password are present
@@ -205,7 +205,7 @@ app.post("/login", async (req, res) => {
  *   }
  * }
  */
-app.get("/profile", (req, res) => {
+app.get("/api/profile", (req, res) => {
   const { token } = req.cookies; // Get token from cookies
 
   // Verify token with secret key
@@ -244,7 +244,7 @@ app.get("/profile", (req, res) => {
  *
  * @response {json} "ok" - Indicates that the logout was successful.
  */
-app.post("/logout", (req, res) => {
+app.post("/api/logout", (req, res) => {
   res.clearCookie("token", { maxAge: 0, secure: true }); // Clear the token cookie securely
   req.session.destroy(() => {
     // Assuming you're using express-session
@@ -277,7 +277,7 @@ app.post("/logout", (req, res) => {
   -d '{"title": "My New Post", "summary": "This is a summary", "content": "This is the content", "file": "path/to/file"}'
  */
 
-app.post("/post", upload.single("file"), async (req, res) => {
+app.post("/api/post", upload.single("file"), async (req, res) => {
   try {
     const { token } = req.cookies; // Verifying the user's JWT token
     const decoded = jwt.verify(token, secretKey);
@@ -337,7 +337,7 @@ app.post("/post", upload.single("file"), async (req, res) => {
  *   ...
  * ]
  */
-app.get("/post", async (req, res) => {
+app.get("/api/post", async (req, res) => {
   // Find all posts in the database
   res.json(
     await Post.find()
@@ -373,7 +373,7 @@ app.get("/post", async (req, res) => {
  *   }
  * }
  */
-app.get("/post/:id", async (req, res) => {
+app.get("/api/post/:id", async (req, res) => {
   const { id } = req.params; // Destructure id from params
   const postDoc = await Post.findById(id).populate("author", ["username"]); // Find post by id, populate author, it means include the username from author model
   res.json(postDoc); // Return post document as json
@@ -413,7 +413,7 @@ app.get("/post/:id", async (req, res) => {
  * });
  */
 
-app.put("/post/", upload.single("file"), async (req, res) => {
+app.put("/api/post/", upload.single("file"), async (req, res) => {
   // Verify user's JWT token and check post ownership
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, async (err, info) => {
@@ -468,7 +468,7 @@ app.put("/post/", upload.single("file"), async (req, res) => {
 /* -------------------------------------------------------------------------- */
 /*                                Delete a post                               */
 /* -------------------------------------------------------------------------- */
-app.delete("/delete/:id", async (req, res) => {
+app.delete("/api/delete/:id", async (req, res) => {
   // Verificar el token JWT del usuario y comprobar la propiedad del post
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, async (err, info) => {

@@ -2,13 +2,15 @@
 /*                             EDIT POST COMPONENT                            */
 /* -------------------------------------------------------------------------- */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import Editor from "../Editor";
 import "react-quill/dist/quill.snow.css";
+import { UserContext } from "../UserContext";
 
 function EditPost() {
   const { id } = useParams();
+  const { baseUrl } = useContext(UserContext);
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
@@ -19,7 +21,7 @@ function EditPost() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/post/" + id);
+        const response = await fetch(`${baseUrl}/post/` + id);
         const responseToJson = await response.json();
         setTitle(responseToJson.title);
         setSummary(responseToJson.summary);
@@ -45,7 +47,7 @@ function EditPost() {
       data.set("file", files?.[0]);
     }
 
-    const response = await fetch("http://localhost:4000/post", {
+    const response = await fetch(`${baseUrl}/post/`, {
       method: "PUT",
       body: data,
       credentials: "include",

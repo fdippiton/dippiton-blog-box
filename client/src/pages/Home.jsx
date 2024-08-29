@@ -2,16 +2,18 @@
 /*                               HOME COMPONENT                               */
 /* -------------------------------------------------------------------------- */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Post from "../Post";
+import { UserContext } from "../UserContext";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
+  const { baseUrl } = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/post");
+        const response = await fetch(`${baseUrl}/post`);
         const responseToJson = await response.json();
         setPosts(responseToJson);
       } catch (error) {

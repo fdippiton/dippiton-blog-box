@@ -7,13 +7,13 @@ import { format } from "date-fns";
 import { UserContext } from "../UserContext";
 
 function PostPage() {
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, baseUrl } = useContext(UserContext);
   const { id } = useParams();
   const [postInfo, setPostInfo] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`http://localhost:4000/post/${id}`);
+      const response = await fetch(`${baseUrl}/post/${id}`);
       const responseToJson = await response.json();
       setPostInfo(responseToJson);
     };

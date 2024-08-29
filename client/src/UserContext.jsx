@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import config from "./config.js";
 
 export const UserContext = createContext({});
 
@@ -9,9 +10,13 @@ export const UserContext = createContext({});
  * components.
  */
 export function UserContextProvider({ children }) {
+  const baseUrl = config.BASE_URL;
+
+  console.log(baseUrl);
   const [userInfo, setUserInfo] = useState({});
+
   return (
-    <UserContext.Provider value={{ userInfo, setUserInfo }}>
+    <UserContext.Provider value={{ userInfo, setUserInfo, baseUrl }}>
       {children}
     </UserContext.Provider>
   );

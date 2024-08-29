@@ -3,17 +3,19 @@
 /* -------------------------------------------------------------------------- */
 
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Navigate, useParams } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 function DeletePost() {
   const { id } = useParams();
+  const { baseUrl } = useContext(UserContext);
   const [redirect, setRedirect] = useState(false);
 
   async function deletePost(ev) {
     ev.preventDefault();
 
-    const response = await fetch(`http://localhost:4000/delete/${id}`, {
+    const response = await fetch(`${baseUrl}/delete/${id}`, {
       method: "DELETE",
       credentials: "include",
     });

@@ -4,14 +4,14 @@ import { UserContext } from "./UserContext";
 import { Dropdown } from "react-bootstrap";
 
 export default function Header() {
-  const { userInfo, setUserInfo } = useContext(UserContext);
+  const { userInfo, setUserInfo, baseUrl } = useContext(UserContext);
   const username = userInfo?.username;
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/profile", {
+        const response = await fetch(`${baseUrl}/profile`, {
           credentials: "include",
         });
 
