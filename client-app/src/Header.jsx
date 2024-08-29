@@ -32,7 +32,7 @@ export default function Header() {
 
   async function logout() {
     try {
-      await fetch("http://localhost:4000/logout", {
+      await fetch(`${baseUrl}/logout`, {
         method: "POST",
         credentials: "include",
       });

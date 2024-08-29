@@ -17,7 +17,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const { default: mongoose } = require("mongoose");
-const cloudinary = require("cloudinary").v2;
+const cloudinary = require("cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 /* --------------------------------- Models --------------------------------- */
@@ -41,7 +41,7 @@ const Post = require("./models/Post");
  * This allows requests from specified origins, headers, and methods.
  */
 const app = express();
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 
 /* -------------------------------------------------------------------------- */
 /*                                 MIDDLEWARES                                */
@@ -434,7 +434,6 @@ app.put("/api/post/", upload.single("file"), async (req, res) => {
       const urlParts = postDoc.cover.split("/");
       const filename = urlParts[urlParts.length - 1];
       const publicId = filename.split(".")[0];
-      console.log("Public ID extraído:", publicId);
 
       console.log("URL completa:", postDoc.cover);
       console.log("Filename extraído:", filename);

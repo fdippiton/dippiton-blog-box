@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import config from "./config.js";
+// import config from "./config.js";
 
 export const UserContext = createContext({});
 
@@ -10,9 +10,10 @@ export const UserContext = createContext({});
  * components.
  */
 export function UserContextProvider({ children }) {
-  const baseUrl = config.BASE_URL;
-
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  // const baseUrl = config.BASE_URL;
   console.log(baseUrl);
+
   const [userInfo, setUserInfo] = useState({});
 
   return (
