@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100;0,200;0,300;0,600;0,700;0,800;1,100;1,200;1,500;1,600;1,700;1,800&display=swap");
+
 * {
   box-sizing: border-box;
 }
@@ -133,12 +135,15 @@ button {
   font-size: 13px;
 }
 
-form.login h4, form.login h6,
-form.register h4, form.register h6 {
+form.login h4,
+form.login h6,
+form.register h4,
+form.register h6 {
   text-align: center;
 }
 
-form.login h6, form.register h6 {
+form.login h6,
+form.register h6 {
   font-size: 13px;
 }
 
@@ -233,7 +238,7 @@ svg {
   position: fixed;
   width: 100%;
   font-weight: bold;
-  font-family: "Inter", sans-serif;
+  font-family: "JetBrains Mono", monospace;
 }
 
 #dropdown-basic,

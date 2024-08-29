@@ -244,6 +244,29 @@ app.put("/post/", upload.single("file"), async (req, res) => {
       fileUrl = req.file.path; // Esta es la URL de Cloudinary
     }
 
+    if (fileUrl) {
+      const urlParts = postDoc.cover.split("/");
+      const filename = urlParts[urlParts.length - 1];
+      const publicId = filename.split(".")[0];
+      console.log("Public ID extraído:", publicId);
+
+      console.log("URL completa:", postDoc.cover);
+      console.log("Filename extraído:", filename);
+      console.log("Public ID extraído:", publicId);
+
+      try {
+        const result = await cloudinary.uploader.destroy(
+          `blog-box-images/${publicId}`
+        );
+        console.log("Resultado de la eliminación en Cloudinary:", result);
+      } catch (cloudinaryError) {
+        console.error(
+          "Error al eliminar la imagen de Cloudinary:",
+          cloudinaryError
+        );
+      }
+    }
+
     // Update the post
     await postDoc.updateOne({
       title,
