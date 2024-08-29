@@ -1,7 +1,11 @@
+/* -------------------------------------------------------------------------- */
+/*                             EDIT POST COMPONENT                            */
+/* -------------------------------------------------------------------------- */
+
 import React, { useState, useEffect } from "react";
-import "react-quill/dist/quill.snow.css";
 import { Navigate, useParams } from "react-router-dom";
 import Editor from "../Editor";
+import "react-quill/dist/quill.snow.css";
 
 function EditPost() {
   const { id } = useParams();

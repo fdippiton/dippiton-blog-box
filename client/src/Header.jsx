@@ -1,6 +1,5 @@
 import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { UserContext } from "./UserContext";
 import { Dropdown } from "react-bootstrap";
 
@@ -45,7 +44,6 @@ export default function Header() {
       navigate("/");
     } catch (error) {
       console.error("Error during logout:", error);
-      // Puedes manejar el error según tus necesidades
     }
   }
 

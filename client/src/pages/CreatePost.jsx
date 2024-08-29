@@ -1,7 +1,11 @@
+/* -------------------------------------------------------------------------- */
+/*                            CREATE POST COMPONENT                           */
+/* -------------------------------------------------------------------------- */
+
 import React, { useState } from "react";
-import "react-quill/dist/quill.snow.css";
 import { Navigate } from "react-router-dom";
 import Editor from "../Editor";
+import "react-quill/dist/quill.snow.css";
 
 function CreatePost() {
   const [title, setTitle] = useState("");
@@ -19,8 +23,6 @@ function CreatePost() {
     data.set("content", content);
     data.set("file", files);
 
-    // console.log(title, summary, content, files, files);
-
     try {
       // Sends a POST request to the server at "http://localhost:4000/post" with the FormData object as the body of the request. The credentials: "include" option tells the browser to include any cookies associated with the current domain when making the request.
       const response = await fetch("http://localhost:4000/post", {
@@ -37,7 +39,6 @@ function CreatePost() {
         // Maneja respuestas con errores HTTP
         const errorData = await response.json(); // Asume que el servidor responde con JSON
         console.error("Error al crear el post:", errorData);
-        // Opcional: Puedes manejar el error de manera más específica aquí
       }
     } catch (error) {
       console.error("Error al enviar la solicitud:", error);

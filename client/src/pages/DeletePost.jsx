@@ -1,10 +1,13 @@
+/* -------------------------------------------------------------------------- */
+/*                            DELETE POST COMPONENT                           */
+/* -------------------------------------------------------------------------- */
+
 import React from "react";
 import { useState, useEffect } from "react";
 import { Navigate, useParams } from "react-router-dom";
 
 function DeletePost() {
   const { id } = useParams();
-
   const [redirect, setRedirect] = useState(false);
 
   async function deletePost(ev) {
@@ -23,6 +26,7 @@ function DeletePost() {
   if (redirect) {
     return <Navigate to={"/"} />;
   }
+
   return (
     <div>
       ¿Are you sure you want to delete this post? <br></br>

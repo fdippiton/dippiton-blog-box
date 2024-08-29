@@ -1,17 +1,23 @@
+/* -------------------------------------------------------------------------- */
+/*                            LOGIN PAGE COMPONENT                            */
+/* -------------------------------------------------------------------------- */
+
 import React from "react";
 import { useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 
 function LoginPage() {
+  const { setUserInfo } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const { setUserInfo } = useContext(UserContext);
 
   async function login(ev) {
     ev.preventDefault();
 
+    /* The code snippet you provided is making a POST request to "http://localhost:4000/login" endpoint
+   with the following configurations: */
     const response = await fetch("http://localhost:4000/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
