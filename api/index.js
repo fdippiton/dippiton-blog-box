@@ -2,12 +2,15 @@
 const express = require("express");
 const config = require("../config.js");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
 const multer = require("multer");
 const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 // Models
 const User = require("./models/User");
@@ -30,16 +33,34 @@ const Post = require("./models/Post");
 
 const app = express();
 // multer es una biblioteca de middleware para Node.js que se utiliza para gestionar la carga de archivos (por ejemplo, imágenes, videos, documentos) en aplicaciones web. Facilita la manipulación de datos de formulario que contienen archivos, que generalmente se envían mediante formularios HTML.
-const uploadMiddleware = multer({ dest: "uploads/" });
+// const uploadMiddleware = multer({ dest: "uploads/" });
 const secretKey = config.SECRET_KEY;
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
-app.use("/uploads", express.static(__dirname + "/uploads"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+// app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // Connect database
 const connectionString = config.database.CONNECTIONSTRING;
 mongoose.connect(connectionString);
+
+cloudinary.config({
+  cloud_name: config.IMAGES_CLOUD_NAME,
+  api_key: config.CLOUDINARY_API_KEY,
+  api_secret: config.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "blog-box-images",
+    allowed_formats: ["jpg", "png", "jpeg", "gif"],
+  },
+});
+
+const upload = multer({ storage: storage });
 
 /* -------------------------------------------------------------------------- */
 /*                              Register new user                             */
@@ -124,32 +145,59 @@ app.post("/logout", (req, res) => {
 /* -------------------------------------------------------------------------- */
 /*                               Create new post                              */
 /* -------------------------------------------------------------------------- */
-app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
-  // Renaming the file with the correct extension
-  const { originalname, path } = req.file;
-  const parts = originalname.split(".");
-  const ext = parts[parts.length - 1];
-  const newPath = path + "." + ext;
-  fs.renameSync(path, newPath);
 
+app.post("/post", upload.single("file"), async (req, res) => {
   // Verifying the user's JWT token
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, async (err, info) => {
-    if (err) throw err;
-    const { title, summary, content } = req.body;
+    if (err) return res.status(401).json({ error: "Token inválido" });
+    const { title, summary, content, file } = req.body;
+
+    let fileUrl = null;
+    if (req.file) {
+      fileUrl = req.file.path; // Esta es la URL de Cloudinary
+    }
+    console.log("data", title, summary, content, fileUrl);
 
     // Creating a new post in the database
     const postDoc = await Post.create({
       title,
       summary,
       content,
-      cover: newPath,
+      cover: fileUrl,
       author: info.id,
     });
     // Sending the newly created post as a JSON response
     res.json(postDoc);
   });
 });
+
+// app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
+//   // Renaming the file with the correct extension
+//   const { originalname, path } = req.file;
+//   const parts = originalname.split(".");
+//   const ext = parts[parts.length - 1];
+//   const newPath = path + "." + ext;
+//   fs.renameSync(path, newPath);
+
+//   // Verifying the user's JWT token
+//   const { token } = req.cookies;
+//   jwt.verify(token, secretKey, {}, async (err, info) => {
+//     if (err) throw err;
+//     const { title, summary, content } = req.body;
+
+//     // Creating a new post in the database
+//     const postDoc = await Post.create({
+//       title,
+//       summary,
+//       content,
+//       cover: newPath,
+//       author: info.id,
+//     });
+//     // Sending the newly created post as a JSON response
+//     res.json(postDoc);
+//   });
+// });
 
 /* -------------------------------------------------------------------------- */
 /*                                Get all posts                               */
@@ -179,17 +227,7 @@ app.get("/post/:id", async (req, res) => {
 /* -------------------------------------------------------------------------- */
 /*                                 Update post                                */
 /* -------------------------------------------------------------------------- */
-app.put("/post/", uploadMiddleware.single("file"), async (req, res) => {
-  let newPath = null;
-  if (req.file) {
-    // Renaming the file with the correct extension
-    const { originalname, path } = req.file;
-    const parts = originalname.split(".");
-    const ext = parts[parts.length - 1];
-    newPath = path + "." + ext;
-    fs.renameSync(path, newPath);
-  }
-
+app.put("/post/", upload.single("file"), async (req, res) => {
   // Verify user's JWT token and check post ownership
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, async (err, info) => {
@@ -201,17 +239,56 @@ app.put("/post/", uploadMiddleware.single("file"), async (req, res) => {
       return res.status(400).json("You are not the author");
     }
 
+    let fileUrl = null;
+    if (req.file) {
+      fileUrl = req.file.path; // Esta es la URL de Cloudinary
+    }
+
     // Update the post
     await postDoc.updateOne({
       title,
       summary,
       content,
-      cover: newPath ? newPath : postDoc.cover,
+      cover: fileUrl ? fileUrl : postDoc.cover,
     });
     // Sending the updated post as a JSON response
     res.json(postDoc);
   });
 });
+
+// app.put("/post/", uploadMiddleware.single("file"), async (req, res) => {
+//   let newPath = null;
+//   if (req.file) {
+//     // Renaming the file with the correct extension
+//     const { originalname, path } = req.file;
+//     const parts = originalname.split(".");
+//     const ext = parts[parts.length - 1];
+//     newPath = path + "." + ext;
+//     fs.renameSync(path, newPath);
+//   }
+
+//   // Verify user's JWT token and check post ownership
+//   const { token } = req.cookies;
+//   jwt.verify(token, secretKey, {}, async (err, info) => {
+//     if (err) throw err;
+//     const { id, title, summary, content } = req.body;
+//     const postDoc = await Post.findById(id);
+//     const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+//     if (!isAuthor) {
+//       return res.status(400).json("You are not the author");
+//     }
+
+//     // Update the post
+//     await postDoc.updateOne({
+//       title,
+//       summary,
+//       content,
+//       cover: newPath ? newPath : postDoc.cover,
+//     });
+//     // Sending the updated post as a JSON response
+//     res.json(postDoc);
+//   });
+// });
 
 /* -------------------------------------------------------------------------- */
 /*                                Delete a post                               */

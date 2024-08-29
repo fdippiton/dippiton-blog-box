@@ -63,7 +63,7 @@ function PostPage() {
         </div>
       )}
       <div className="image">
-        <img src={`http://localhost:4000/${postInfo.cover}`} />
+        <img src={`${postInfo.cover}`} />
       </div>
       <div
         className="content mt-5"
