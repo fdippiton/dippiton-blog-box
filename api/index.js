@@ -303,24 +303,57 @@ app.delete("/delete/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-      // Buscar y eliminar el post por su id
-      const postDeleted = await Post.findOneAndDelete({ _id: id });
+      // Buscar el post antes de eliminarlo
+      const post = await Post.findById(id);
+
+      if (!post) {
+        return res.status(404).json("Post not found");
+      }
 
       // Verificar si el usuario es el autor del post
-      const isAuthor =
-        JSON.stringify(postDeleted.author) === JSON.stringify(info.id);
+      const isAuthor = JSON.stringify(post.author) === JSON.stringify(info.id);
 
       if (!isAuthor) {
         return res.status(400).json("You are not the author");
       }
 
-      // Verificar si se eliminó correctamente y enviar la respuesta
+      // Si el post tiene una imagen, eliminarla de Cloudinary
+      console.log("URL de la imagen:", post.cover);
+
+      if (post.cover) {
+        const urlParts = post.cover.split("/");
+        const filename = urlParts[urlParts.length - 1];
+        const publicId = filename.split(".")[0];
+        console.log("Public ID extraído:", publicId);
+
+        console.log("URL completa:", post.cover);
+        console.log("Filename extraído:", filename);
+        console.log("Public ID extraído:", publicId);
+
+        try {
+          const result = await cloudinary.uploader.destroy(
+            `blog-box-images/${publicId}`
+          );
+          console.log("Resultado de la eliminación en Cloudinary:", result);
+        } catch (cloudinaryError) {
+          console.error(
+            "Error al eliminar la imagen de Cloudinary:",
+            cloudinaryError
+          );
+        }
+      }
+
+      // Eliminar el post de la base de datos
+      const postDeleted = await Post.findByIdAndDelete(id);
+
       if (postDeleted) {
         console.log("Registro eliminado:", postDeleted);
-        return res.status(200).json("Post deleted successfully");
+        return res
+          .status(200)
+          .json("Post and associated image deleted successfully");
       } else {
-        console.log("No se encontró el registro para eliminar.");
-        return res.status(404).json("Post not found");
+        console.log("Error al eliminar el registro.");
+        return res.status(500).json("Error deleting post");
       }
     } catch (error) {
       console.error("Error al eliminar el registro:", error);
