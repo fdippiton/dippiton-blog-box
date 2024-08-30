@@ -112,6 +112,7 @@ const upload = multer({ storage: storage });
  * }
  */
 app.post("/api/register", async (req, res) => {
+  mongoose.connect(connectionString);
   const { username, password } = req.body; // destructure request body for username and password
   const hashedPassword = await bcrypt.hash(password, 10); // Hashear la contraseña antes de almacenarla
 
@@ -134,6 +135,7 @@ app.post("/api/register", async (req, res) => {
  * GET /profile
  */
 app.post("/api/login", async (req, res) => {
+  mongoose.connect(connectionString);
   const { username, password } = req.body; // destructure request body for username and password
 
   // Input validation: ensure username and password are present
@@ -211,6 +213,7 @@ app.post("/api/login", async (req, res) => {
  * }
  */
 app.get("/api/profile", (req, res) => {
+  mongoose.connect(connectionString);
   const { token } = req.cookies; // Get token from cookies
 
   // Verify token with secret key
@@ -250,6 +253,7 @@ app.get("/api/profile", (req, res) => {
  * @response {json} "ok" - Indicates that the logout was successful.
  */
 app.post("/api/logout", (req, res) => {
+  mongoose.connect(connectionString);
   res.clearCookie("token", { maxAge: 0, secure: true }); // Clear the token cookie securely
   req.session.destroy(() => {
     // Assuming you're using express-session
@@ -283,6 +287,7 @@ app.post("/api/logout", (req, res) => {
  */
 
 app.post("/api/post", upload.single("file"), async (req, res) => {
+  mongoose.connect(connectionString);
   try {
     const { token } = req.cookies; // Verifying the user's JWT token
     const decoded = jwt.verify(token, secretKey);
@@ -343,6 +348,7 @@ app.post("/api/post", upload.single("file"), async (req, res) => {
  * ]
  */
 app.get("/api/post", async (req, res) => {
+  mongoose.connect(connectionString);
   // Find all posts in the database
   res.json(
     await Post.find()
@@ -379,6 +385,7 @@ app.get("/api/post", async (req, res) => {
  * }
  */
 app.get("/api/post/:id", async (req, res) => {
+  mongoose.connect(connectionString);
   const { id } = req.params; // Destructure id from params
   const postDoc = await Post.findById(id).populate("author", ["username"]); // Find post by id, populate author, it means include the username from author model
   res.json(postDoc); // Return post document as json
@@ -419,6 +426,7 @@ app.get("/api/post/:id", async (req, res) => {
  */
 
 app.put("/api/post/", upload.single("file"), async (req, res) => {
+  mongoose.connect(connectionString);
   // Verify user's JWT token and check post ownership
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, async (err, info) => {
@@ -473,6 +481,7 @@ app.put("/api/post/", upload.single("file"), async (req, res) => {
 /*                                Delete a post                               */
 /* -------------------------------------------------------------------------- */
 app.delete("/api/delete/:id", async (req, res) => {
+  mongoose.connect(connectionString);
   // Verificar el token JWT del usuario y comprobar la propiedad del post
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, async (err, info) => {
