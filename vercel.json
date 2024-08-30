@@ -1,6 +1,7 @@
 {
   "buildCommand": "cd client-app && yarn install && npx vite build",
   "outputDirectory": "client-app/dist",
+  "framework": "vite",
   "rewrites": [
     {
       "source": "/api/(.*)",
