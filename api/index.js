@@ -41,7 +41,7 @@ const Post = require("./models/Post");
  * This allows requests from specified origins, headers, and methods.
  */
 const app = express();
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use(cors({ credentials: true, origin: "http://localhost:5173", "https://dippiton-blog-box.vercel.app/" }));
 
 /* -------------------------------------------------------------------------- */
 /*                                 MIDDLEWARES                                */
