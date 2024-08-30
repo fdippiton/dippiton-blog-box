@@ -8,7 +8,7 @@
  */
 require("dotenv").config();
 
-const config = require("../config.js");
+// const config = require("../config.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const express = require("express");
