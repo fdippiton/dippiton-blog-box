@@ -79,10 +79,7 @@ if (typeof connectionString !== "string" || !connectionString.trim()) {
     "CONNECTIONSTRING no está definida en el archivo .env o está vacía"
   );
 }
-mongoose.connect(connectionString, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(connectionString);
 
 mongoose.connection.on("error", (err) => {
   console.error("MongoDB connection error:", err);
@@ -122,7 +119,12 @@ const upload = multer({ storage: storage });
  * }
  */
 app.post("/api/register", async (req, res) => {
-  mongoose.connect(connectionString);
+  await mongoose.connect(connectionString);
+
+  mongoose.connection.on("error", (err) => {
+    console.error("MongoDB connection error:", err);
+  });
+
   const { username, password } = req.body; // destructure request body for username and password
   const hashedPassword = await bcrypt.hash(password, 10); // Hashear la contraseña antes de almacenarla
 
@@ -145,7 +147,12 @@ app.post("/api/register", async (req, res) => {
  * GET /profile
  */
 app.post("/api/login", async (req, res) => {
-  mongoose.connect(connectionString);
+  await mongoose.connect(connectionString);
+
+  mongoose.connection.on("error", (err) => {
+    console.error("MongoDB connection error:", err);
+  });
+
   const { username, password } = req.body; // destructure request body for username and password
 
   // Input validation: ensure username and password are present
@@ -222,15 +229,20 @@ app.post("/api/login", async (req, res) => {
  *   }
  * }
  */
-app.get("/api/profile", (req, res) => {
-  mongoose.connect(connectionString);
-  const { token } = req.cookies; // Get token from cookies
+app.get("/api/profile", async (req, res) => {
+  try {
+    await mongoose.connect(connectionString);
 
-  // Verify token with secret key
-  jwt
-    .verify(token, secretKey, {}, (err, info) => {
+    mongoose.connection.on("error", (err) => {
+      console.error("MongoDB connection error:", err);
+    });
+
+    const { token } = req.cookies; // Obtener el token de las cookies
+
+    // Verificar el token con la clave secreta
+    jwt.verify(token, secretKey, {}, (err, info) => {
       if (err) {
-        // Handle error cases
+        // Manejar casos de error
         if (err.name === "TokenExpiredError") {
           return res.status(401).json({ error: "Token has expired" });
         } else {
@@ -238,13 +250,13 @@ app.get("/api/profile", (req, res) => {
         }
       }
 
-      res.json(info); // If token is valid, send user information as JSON
-    })
-    .catch((err) => {
-      // Catch any unexpected errors
-      console.error(err);
-      res.status(500).json({ error: "Internal Server Error" });
+      res.json(info); // Si el token es válido, enviar la información del usuario como JSON
     });
+  } catch (err) {
+    // Capturar cualquier error inesperado
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 /* -------------------------------------------------------------------------- */
@@ -263,7 +275,6 @@ app.get("/api/profile", (req, res) => {
  * @response {json} "ok" - Indicates that the logout was successful.
  */
 app.post("/api/logout", (req, res) => {
-  mongoose.connect(connectionString);
   res.clearCookie("token", { maxAge: 0, secure: true }); // Clear the token cookie securely
   req.session.destroy(() => {
     // Assuming you're using express-session
@@ -297,7 +308,12 @@ app.post("/api/logout", (req, res) => {
  */
 
 app.post("/api/post", upload.single("file"), async (req, res) => {
-  mongoose.connect(connectionString);
+  await mongoose.connect(connectionString);
+
+  mongoose.connection.on("error", (err) => {
+    console.error("MongoDB connection error:", err);
+  });
+
   try {
     const { token } = req.cookies; // Verifying the user's JWT token
     const decoded = jwt.verify(token, secretKey);
@@ -358,7 +374,12 @@ app.post("/api/post", upload.single("file"), async (req, res) => {
  * ]
  */
 app.get("/api/post", async (req, res) => {
-  mongoose.connect(connectionString);
+  await mongoose.connect(connectionString);
+
+  mongoose.connection.on("error", (err) => {
+    console.error("MongoDB connection error:", err);
+  });
+
   // Find all posts in the database
   res.json(
     await Post.find()
@@ -395,7 +416,12 @@ app.get("/api/post", async (req, res) => {
  * }
  */
 app.get("/api/post/:id", async (req, res) => {
-  mongoose.connect(connectionString);
+  await mongoose.connect(connectionString);
+
+  mongoose.connection.on("error", (err) => {
+    console.error("MongoDB connection error:", err);
+  });
+
   const { id } = req.params; // Destructure id from params
   const postDoc = await Post.findById(id).populate("author", ["username"]); // Find post by id, populate author, it means include the username from author model
   res.json(postDoc); // Return post document as json
@@ -436,7 +462,12 @@ app.get("/api/post/:id", async (req, res) => {
  */
 
 app.put("/api/post/", upload.single("file"), async (req, res) => {
-  mongoose.connect(connectionString);
+  await mongoose.connect(connectionString);
+
+  mongoose.connection.on("error", (err) => {
+    console.error("MongoDB connection error:", err);
+  });
+
   // Verify user's JWT token and check post ownership
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, async (err, info) => {
@@ -491,7 +522,12 @@ app.put("/api/post/", upload.single("file"), async (req, res) => {
 /*                                Delete a post                               */
 /* -------------------------------------------------------------------------- */
 app.delete("/api/delete/:id", async (req, res) => {
-  mongoose.connect(connectionString);
+  await mongoose.connect(connectionString);
+
+  mongoose.connection.on("error", (err) => {
+    console.error("MongoDB connection error:", err);
+  });
+
   // Verificar el token JWT del usuario y comprobar la propiedad del post
   const { token } = req.cookies;
   jwt.verify(token, secretKey, {}, async (err, info) => {
