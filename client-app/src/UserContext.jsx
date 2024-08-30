@@ -11,9 +11,6 @@ export const UserContext = createContext({});
  */
 export function UserContextProvider({ children }) {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
-  // const baseUrl = config.BASE_URL;
-  console.log(baseUrl);
-
   const [userInfo, setUserInfo] = useState({});
 
   return (

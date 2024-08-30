@@ -42,6 +42,7 @@ export default function Header() {
 
       // Redirecciona a la página principal
       navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error("Error during logout:", error);
     }
