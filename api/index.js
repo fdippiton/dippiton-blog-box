@@ -44,7 +44,10 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "*",
+    origin: [
+      "http://localhost:5173", // URL de desarrollo
+      "https://dippiton-blog-box.vercel.app", // URL de producción
+    ],
   })
 );
 
@@ -76,7 +79,14 @@ if (typeof connectionString !== "string" || !connectionString.trim()) {
     "CONNECTIONSTRING no está definida en el archivo .env o está vacía"
   );
 }
-mongoose.connect(connectionString);
+mongoose.connect(connectionString, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
+});
 
 /* --------------------- Image storage Cloudinary config -------------------- */
 
